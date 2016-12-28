@@ -1,0 +1,20 @@
+/* Buffon's Needle Simulation */
+/* needle.iml                 */
+
+proc iml;
+    d = 2;
+    Nrepeat = 10000;
+    pi = 4;
+    count = 0;
+    success = 0;
+    do repeat=1 to Nrepeat;
+        theta = uniform(0)*pi;
+        y = uniform(0)*d/2;
+        temp = sin(theta);
+        if temp >= 0 then count = count + 1;
+        if y <= 0.5*temp then success = success + 1;
+    end;
+    p = success/count;
+    estimate = 2/(d*p);
+    print Nrepeat count success p[format=12.4] estimate[format=12.4];
+end;

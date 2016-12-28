@@ -1,0 +1,37 @@
+/* GLRT, Wald and Score Testing for Multinomial Distribution */
+/* glrt.iml                                                  */
+
+proc iml;
+    Nrepeat = 1000;
+    E  = {90,30,30,10};
+    n  = sum(E);
+    count0=0;  count1=0;  count2=0;   count3=0;
+    do repeat=1 to Nrepeat;
+       F  = j(4,1,0);
+       do i=1 to n;
+          temp = uniform(0);
+          if temp <= 9/16 then F[1,1]=F[1,1]+1;
+             else if temp <= 12/16 then F[2,1]=F[2,1]+1;
+                else if temp <= 15/16 then F[3,1]=F[3,1]+1;
+                   else F[4,1]=F[4,1]+1;
+       end;
+       if min(F) ^= 0 then do;
+           count0=count0 +1;
+           G = 2*sum(F#log(F/E));
+           W = sum((F-E)#(F-E)/F);
+           S = sum((F-E)#(F-E)/E);
+           if G >= 9.30 then count1=count1+1;
+           if W >= 9.52 then count2=count2+1;
+           if S >= 9.44 then count3=count3+1;
+       end;
+    end;
+    pvalue1 = count1/count0;
+    pvalue2 = count2/count0;
+    pvalue3 = count3/count0;
+    pvalue1a = 1-probchi(9.30,3);
+    pvalue2a = 1-probchi(9.52,3);
+    pvalue3a = 1-probchi(9.44,3);
+
+    print "Monte-Carlo"  count0 Nrepeat pvalue1 pvalue2 pvalue3;
+    print "Large-Sample" pvalue1a[format=8.3] pvalue2a[format=8.3] pvalue3a[format=8.3];
+quit;

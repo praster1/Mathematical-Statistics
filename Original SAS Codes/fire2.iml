@@ -1,0 +1,52 @@
+/* Forest Fire Process Simulation with Replications */
+/* fire2.iml                                        */
+
+proc iml;
+    p = 0.5;  n=20;
+    nn = 2*n+1;
+    Nrepeat = 1000;
+    T = j(Nrepeat,1,0);
+    K = j(Nrepeat,1,0);
+    do repeat=1 to Nrepeat;
+
+       FIRE1 = j(nn,nn,'.');
+       FIRE2 = j(nn,nn,'.');
+       MAP = j(nn,nn,'.');
+       status = 1;
+       FIRE1[n+1,n+1] = '0';
+       time = 0;
+       do while (status > 0);
+           status = 0;
+           do i1 = 1 to nn;
+           do i2 = 1 to nn;
+             if FIRE1[i1,i2] = '0' then do;
+                 if (i1 < nn) then do;
+                    if (uniform(0) < p) & (MAP[i1+1,i2] = '.') then
+                       do;  FIRE2[i1+1,i2] = '0';  status = 1;  end;  end;
+                 if (i1 > 1)  then do;
+                    if (uniform(0) < p) & (MAP[i1-1,i2] = '.') then
+                       do;  FIRE2[i1-1,i2] = '0';  status = 1;  end;  end;
+                 if (i2 < nn) then do;
+                    if (uniform(0) < p) & (MAP[i1,i2+1] = '.') then
+                       do;  FIRE2[i1,i2+1] = '0';  status = 1;  end;  end;
+                 if (i2 > 1)  then do;
+                    if (uniform(0) < p) & (MAP[i1,i2-1] = '.') then
+                       do;  FIRE2[i1,i2-1] = '0';  status = 1;  end;  end;
+                 MAP[i1,i2] = '1';
+              end;
+           end;
+           end;
+           FIRE1 = FIRE2;
+           FIRE2 = j(nn,nn,'.');
+           time = time + 1;
+       end;
+       count=0;
+       do i1 = 1 to nn;
+       do i2 = 1 to nn;
+           if MAP[i1,i2] = '1' then count=count+1;
+       end;  end;
+       T[repeat] = time;
+       K[repeat] = count;
+    end;
+    print T K;
+quit;

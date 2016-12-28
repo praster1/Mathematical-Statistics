@@ -1,0 +1,21 @@
+/* Binomial Random Number Generation */
+/* b.iml                                     */
+
+proc iml;
+   n = 10;  theta=0.25;
+   Nrepeat = 100;
+   sum = 0;
+   do repeat=1 to Nrepeat;
+      sum1=0;
+      do j = 1 to n;
+         if uniform(0) < theta then success=1;
+         else success=0;
+         sum1 = sum1 + success;
+      end;
+      x = sum1;
+      print x;
+      sum = sum + x;
+   end;
+   mean = sum/Nrepeat;
+   print Nrepeat mean;
+quit;

@@ -1,0 +1,36 @@
+/* Logit Model Fitting    */
+/* File Name : logit.iml  */
+
+proc iml;
+    X = {1  1.691,    1  1.691,
+         1  1.724,    1  1.724,
+         1  1.755,    1  1.755,
+         1  1.784,    1  1.784,
+         1  1.811,    1  1.811,
+         1  1.837,    1  1.837,
+         1  1.861,    1  1.861,
+         1  1.884,    1  1.884};
+    y = {1,  0,  1,  0,  1,  0,  1,  0,  1,  0,  1,  0,  1,  0,  1,  0};
+    count = {6, 53, 13, 47, 18, 44, 28, 38, 52, 11, 53,  6, 61,  1, 60,  0};
+
+    beta_old = {0, 0};   tol = 1;   repeat=1;
+
+    do while (tol > 0.000001);
+       eta = X* beta_old;
+       bprime1 = exp(eta)/(1+exp(eta));
+       bprime2 = bprime1/(1+exp(eta));
+       I = X`*diag(count#bprime2)*X;
+       Iinverse = inv(I);
+       U = X`*diag(count)*(y-bprime1);
+       beta_new = beta_old + Iinverse*X`*diag(count)*(y-bprime1);
+       diff = beta_new - beta_old;
+       tol = ssq(diff);
+       print repeat beta_new[format=8.4];
+       repeat = repeat+1;
+       beta_old = beta_new;
+    end;
+
+   loglik = 2*(eta`*diag(count)*y - count`*log(1+exp(eta)));
+   se = sqrt(vecdiag(Iinverse));
+   print loglik[format=8.4] se[format=8.4];
+quit;

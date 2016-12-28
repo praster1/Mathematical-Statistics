@@ -1,0 +1,30 @@
+/* Coverage Evaluation for Poisson Parameter */
+/* File Name:  conf3.iml                     */
+
+proc iml;
+   n = 4;  do theta = 1 to 10;
+   Nrepeat = 10000;
+   Ncover=0;
+   do repeat=1 to Nrepeat;
+      sum = 0;
+      do sample=1 to n;
+         count = -1;
+         sum1 = 0;
+         do while (sum1 < 1);
+            t = -(1/theta)*log(1-uniform(0));
+            sum1 = sum1 + t;
+            count = count + 1;
+         end;
+         X = count;
+         sum = sum + X;
+      end;
+      Xbar = sum / n;
+      U = sqrt(Xbar) + 1.96/2;
+      L = sqrt(Xbar) - 1.96/2;
+      if sqrt(theta) <= U then do; if sqrt(theta) >= L then cover=1; end;
+          else cover=0;
+      Ncover = Ncover + cover;
+      end;
+      coverage = Ncover / Nrepeat;
+      print theta Nrepeat coverage;  end;
+quit;
