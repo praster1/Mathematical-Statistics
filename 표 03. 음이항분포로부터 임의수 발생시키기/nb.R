@@ -8,7 +8,6 @@ for (i in 1:Nrepeat)
 	
 	while(sum1 < r)
 	{
-		success = NULL;
 		success = ifelse(runif(1) < theta,  1, 0)
 		sum1 = sum1 + success;
 		sum0 = sum0 + 1 - success;
