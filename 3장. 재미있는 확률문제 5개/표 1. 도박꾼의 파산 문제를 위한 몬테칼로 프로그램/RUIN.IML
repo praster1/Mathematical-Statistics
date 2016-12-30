@@ -1,0 +1,26 @@
+/* Game Duration Time for Gambler's Ruin Problem */
+/* ruin.iml                                      */
+
+proc iml;
+    p = 18/38;    q = 1-p;
+    k = 5;        n = 10 ;
+    Nrepeat=1000;
+    S = j(Nrepeat,1,0);   /* Value 1 = Ruin, Value 0 = Success */
+    T = j(Nrepeat,1,0);   /* Real Value := Game Duration Time  */
+
+    do repeat=1 to Nrepeat;
+       position = k;
+       time = 0;
+       do while ((position > 0) & (position < n));
+          if uniform(0) < p then position = position+1;
+          else position = position-1;
+          time = time + 1;
+       end;
+       if position = 0 then S[repeat] = 1;
+       T[repeat] = time;
+    end;
+    mean1 = S[+]/Nrepeat;
+    mean2 = T[+]/Nrepeat;
+    print Nrepeat mean1 mean2;
+    print S T;
+quit;

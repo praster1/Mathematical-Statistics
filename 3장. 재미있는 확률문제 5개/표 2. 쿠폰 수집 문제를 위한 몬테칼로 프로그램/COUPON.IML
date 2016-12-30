@@ -1,0 +1,26 @@
+/* Coupon Collection - How many coupons do we need to buy? */
+/* coupon.iml                                              */
+
+proc iml;
+   n = 365;
+   Nrepeat = 1000;
+   Xrecord = j(Nrepeat,1,0);
+   sum = 0;
+   do repeat=1 to Nrepeat;
+      sum0=0;
+      do coupon=2 to n;
+          theta=1-(coupon-1)/n;
+          success = 0;
+          do while (success = 0);
+              if uniform(0) < theta then success=1;
+              sum0 = sum0 + 1- success;
+          end;
+      x = n + sum0;
+      Xrecord[repeat] = x;
+      end;
+      sum = sum + x;
+   end;
+   mean = sum/Nrepeat;
+   print Nrepeat n mean;
+   print Xrecord;
+quit;
