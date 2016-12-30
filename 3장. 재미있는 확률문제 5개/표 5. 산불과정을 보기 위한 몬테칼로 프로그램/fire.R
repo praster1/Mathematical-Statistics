@@ -117,8 +117,8 @@ while (status > 0)
 	FIRE1 = FIRE2;
 	FIRE2 = matrix('.', nn,nn);
 	time = time + 1;
-	#  print time MAP[format=1.0];
-	#  print time FIRE1[format=1.0];
+	#  print(MAP);
+	#  print(FIRE1)
 	
 	
 	
