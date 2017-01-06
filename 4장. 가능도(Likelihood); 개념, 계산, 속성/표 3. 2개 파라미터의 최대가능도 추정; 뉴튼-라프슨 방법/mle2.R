@@ -34,8 +34,8 @@ iter = 0;
 tol  = 1;
 while ((iter <= maxiter) && (tol > maxtol))
 {
-	update0 = theta - solve(ell(theta1, theta2)$Hess)*ell(theta1, theta2)$grad;
-	tol = ssq(update0 - theta);
+	update0 = theta - solve(ell(theta1, theta2)$Hess)%*%ell(theta1, theta2)$grad;
+	tol = sum((update0 - theta)^2);
 	theta = update0;
 	theta1 = theta[1];
 	theta2 = theta[2];
