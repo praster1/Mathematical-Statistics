@@ -1,0 +1,32 @@
+/* Bisection method for 1/k rule interval computing */
+/* bike.iml                                         */
+
+proc iml;
+   k = 7;
+   maxtol = 0.0001;  maxiter = 10000;
+
+   theta1 = 3;    theta2 = 5;              /* user-supplied initial values     */
+   maxl = 22*log(5.5) - 4*5.5;             /* user-supplied max log-likelihood */
+   start ell;
+      l = 22*log(theta) - 4*theta;         /* user-supplied log-likelihood     */
+      g = l - maxl + log(k);
+   finish;
+
+   iter = 0;
+   theta = theta1;  run ell;  g1 = g;
+   theta = theta2;  run ell;  g2 = g;
+   if (g1*g2 > 0) then print "Initial values are improper!!!";
+   tol = theta2 - theta1;
+
+   do while (iter <= maxiter & tol > maxtol);
+      theta = (theta1 + theta2)/2;
+      run ell;
+      if (g1*g < 0) then do;  theta2 = theta;  g2 = g;  end;
+         else do;             theta1 = theta;  g1 = g; end;
+      iter = iter + 1;
+      tol = theta2 - theta1;
+   end;
+
+   theta = (theta1 + theta2)/2;
+   print iter theta1[format=12.4] theta2[format=12.4] theta[format=12.4];
+quit;

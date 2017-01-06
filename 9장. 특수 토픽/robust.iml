@@ -1,0 +1,35 @@
+/* FileName: robust.iml  */
+/* Huber's M-estimation  */
+
+proc iml;
+  x = {20 25 25 27 28 31 33 34 36 37 44 50 59 85 86};
+  n = ncol(x);
+  mean = x[,+]/n;  sd = sqrt((ssq(x)-n*mean*mean)/(n-1));
+  y = j(1,n,0);  r = rank(x);
+  do i=1 to n;   y[r[i]] = x[i];   end;
+  if mod(n,2) ^= 0 then median = y[(n+1)/2];
+    else median = (y[n/2] + y[n/2+1])/2;
+  x1 = abs(x - median*j(1,n,1));
+  r1 = rank(x1);
+  do i=1 to n;   y[r1[i]] = x1[i];   end;
+  if mod(n,2) ^= 0 then mad = y[(n+1)/2]/0.6745;
+    else mad = (y[n/2] + y[n/2+1])/2/0.6745;
+  print n mean[format=8.2] sd[format=8.2] median mad[format=8.2];
+
+  k = 1.5;   theta0 = median;   iter=0;   diff=1;
+  do while (diff > 0.0001);
+   temp = (x-theta0*j(1,n,1))/mad;
+   num = temp;  denum = j(1,n,1);
+   do i = 1 to n;
+     if temp[i] > k then num[i] = k;
+       else if temp[i] < -k then num[i] = -k;
+     if abs(temp[i]) > k then denum[i] = 0;
+   end;
+   theta = theta0 + mad*sum(num)/sum(denum);
+   diff = abs(theta-theta0);
+   iter = iter+1;
+   theta0 = theta;
+  end;
+  se = mad*sqrt(sum(num#num)/(sum(denum)*sum(denum)));
+  print "Huber's M-estimate" iter theta[format=8.2] se[format=8.2];
+quit;

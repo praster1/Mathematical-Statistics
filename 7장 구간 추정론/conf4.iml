@@ -1,0 +1,30 @@
+/* Confidence interval from a special normal sample */
+/* conf4.iml                                        */
+
+proc iml;
+   x = {116.7 94.7 87.8 110.4 93.5};
+   s1 = sum(x);  s2 = ssq(x);   n = ncol(x);
+   mean = s1/n;  sd = sqrt((s2 - s1*s1/n)/(n-1));
+   print n mean[format=8.2] sd[format=8.2];
+   theta = 90;
+   maxtol = 0.0001;  maxiter = 10000;
+
+   start ell;
+      lik  = -s2/(2*0.01*theta**2)+s1/(0.01*theta)-n*log(theta);
+      lik1 = s2/(0.01*theta**3)-s1/(0.01*theta**2)-n/theta;
+      lik2 = -3*s2/(0.01*theta**4)+2*s1/(0.01*theta**3)+n/(theta**2);
+   finish;
+
+   iter = 0;
+   tol  = 1;
+   do while (iter <= maxiter & tol > maxtol);
+
+      run ell;
+      theta1 = theta - lik1/lik2;
+      tol = abs(theta1 - theta);
+      theta = theta1;
+      iter = iter + 1;
+   end;
+
+   print iter theta[format=12.2] lik2[format=12.4] lik[format=12.4];
+quit;

@@ -1,0 +1,33 @@
+/* Random Permutation Test */
+/* FileName : permute.iml  */
+
+proc iml;
+   Nrepeat = 1000;
+   x = {15 26 10 9 15 20 18 11 8 20 7 9 10 11 11 10 12 17 11 10};
+   y = {95 71 83 91 102 87 93 100 104 94 113 96 83 84 102 100 105 121 86 100};
+   n = ncol(x);
+   r = j(Nrepeat,1,0);
+
+   xbar = sum(x)/n;  ybar = sum(y)/n;
+   num = sum(x#y) - n*xbar*ybar;
+   denum = sqrt((ssq(x)-n*xbar*xbar)*(ssq(y)-n*ybar*ybar));
+   r0 = num/denum;
+   print n r0[format=8.2];
+
+   u = j(1,n,0);
+   count = 0;
+   do repeat=1 to Nrepeat;
+      do i=1 to n;  u[i] = ranuni(0);  end;
+      rnk = rank(u);  y1 = y;
+      do i=1 to n;  y1[rnk[i]] = y[i];  end;
+      y1bar = sum(y1)/n;
+      num = sum(x#y1) - n*xbar*y1bar;
+      denum = sqrt((ssq(x)-n*xbar*xbar)*(ssq(y1)-n*y1bar*y1bar));
+      r1 = num/denum;
+      if r1 <= r0 then count=count+1;
+      r[repeat,1] = r1;
+   end;
+   pvalue = count/Nrepeat;
+   print r[format=8.2];
+   print Nrepeat pvalue;
+quit;
