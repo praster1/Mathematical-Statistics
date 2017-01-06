@@ -1,4 +1,4 @@
-허명회 선생님의 <수리통계학 강의> 4장 링크는 다음과 같습니다.
+허명회 선생님의 <수리통계학 강의> 5장 링크는 다음과 같습니다.
 
 http://www.statground.org/index.php?mid=MyungHoeHuh&document_srl=8943
 
