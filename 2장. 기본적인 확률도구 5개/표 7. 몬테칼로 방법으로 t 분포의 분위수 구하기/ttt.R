@@ -29,7 +29,7 @@ for (i in 1:Nrepeat2)
          T[j] = abs(xbar/sqrt(s2/n))
 	}
 	
-	R = rank(T);
+	R = rank(T, ties.method="random");
 	for (j in 1:Nrepeat1)
 	{
 		S[R[j]] = T[j];

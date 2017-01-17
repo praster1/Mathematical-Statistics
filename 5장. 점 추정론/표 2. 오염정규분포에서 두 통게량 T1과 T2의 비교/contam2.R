@@ -3,7 +3,7 @@ Nrepeat = 1000;
 
 stats = function(x, n)		# Computing Median and Mean
 {
-	r = rank(x);  x1 = rep(0, n);
+	r = rank(x, ties.method="random");  x1 = rep(0, n);
 	
 	for (i in 1:n)
 	{
